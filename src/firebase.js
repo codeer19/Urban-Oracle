@@ -3,15 +3,14 @@ import { getFirestore } from 'firebase/firestore';
 import { getStorage } from 'firebase/storage';
 import { getAuth } from 'firebase/auth';
 
-// Your Firebase configuration
-// REPLACE WITH YOUR ACTUAL CONFIG FROM STEP 3!
+// Your Firebase configuration from environment variables
 const firebaseConfig = {
-  apiKey: "AIzaSyCEFHhuvCg2ZTqFpI1nHe3pA4QbuL3PP3Y",
-  authDomain: "urbanoracle-56863.firebaseapp.com",
-  projectId: "urbanoracle-56863",
-  storageBucket: "urbanoracle-56863.firebasestorage.app",
-  messagingSenderId: "118195587749",
-  appId: "1:118195587749:web:922f7353981b040d8a9b4c"
+  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
+  authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
+  projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.REACT_APP_FIREBASE_APP_ID
 };
 
 // Initialize Firebase
