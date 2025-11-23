@@ -4,11 +4,9 @@
 
 See problems before they happen. Predictive AI + Blockchain voting + Smart routing.
 
-🎬 **[Watch Demo Video](YOUR_YOUTUBE_LINK_HERE)** | 🔗 **[Live Demo](YOUR_DEPLOYED_URL_HERE)** | 📚 **[Documentation](./WINNING_FEATURES.md)**
+**AI-Powered Civic Infrastructure Platform**
 
-> **Hackathon Submission**: Built with Kiro AI for [Hackathon Name]
-> 
-> **Category**: Smart Cities / Civic Tech | **Bonus**: AI/ML Innovation
+> Built with Kiro AI | Category: Smart Cities / Civic Tech
 
 ---
 
@@ -210,43 +208,12 @@ Set these in your hosting platform:
 
 ---
 
-## 🤝 Contributing
-
-We welcome contributions! Please:
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Submit a pull request
-
----
-
 ## 📄 License
 
-MIT License - feel free to use for your city!
+MIT License
 
 ---
 
-## 👥 Team
-
-Built with ❤️ for making cities better
-
 ---
 
-## 📞 Support
-
-- Email: support@urbanoracle.com
-- Twitter: @urbanoracle
-- Discord: discord.gg/urbanoracle
-
----
-
-## 🙏 Acknowledgments
-
-- OpenStreetMap for maps
-- Firebase for backend
-- Groq for AI inference
-- All the citizens making their communities better
-
----
-
-**Made with 🔮 by UrbanOracle Team**
+**Built with Kiro AI for [Hackathon Name]**
