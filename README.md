@@ -216,4 +216,4 @@ MIT License
 
 ---
 
-**Built with Kiro AI for [Hackathon Name]**
+
