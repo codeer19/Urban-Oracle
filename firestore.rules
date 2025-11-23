@@ -1,0 +1,26 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Reports collection
+    match /reports/{reportId} {
+      // Anyone can read and create reports (for demo/testing)
+      allow read, create: if true;
+      
+      // Anyone can update/delete (for demo - tighten this in production)
+      allow update, delete: if true;
+    }
+    
+    // Users collection (for gamification)
+    match /users/{userId} {
+      // Anyone can read/write for demo
+      allow read, write: if true;
+    }
+    
+    // Notifications collection
+    match /notifications/{notificationId} {
+      // Anyone can read/write for demo
+      allow read, write: if true;
+    }
+  }
+}

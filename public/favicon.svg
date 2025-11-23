@@ -1,0 +1,26 @@
+<svg width="192" height="192" viewBox="0 0 192 192" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Gradient background matching your logo -->
+  <defs>
+    <linearGradient id="bgGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#10b981;stop-opacity:1" />
+      <stop offset="50%" style="stop-color:#06b6d4;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#3b82f6;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Rounded square background -->
+  <rect width="192" height="192" rx="48" fill="url(#bgGrad)"/>
+  
+  <!-- "M" Map icon - exact replica of your logo -->
+  <!-- Left fold -->
+  <path d="M 48 72 L 48 132 L 72 120 L 72 60 Z" fill="white" fill-opacity="1"/>
+  
+  <!-- Second fold (lighter) -->
+  <path d="M 72 60 L 72 120 L 96 132 L 96 72 Z" fill="white" fill-opacity="0.85"/>
+  
+  <!-- Third fold -->
+  <path d="M 96 72 L 96 132 L 120 120 L 120 60 Z" fill="white" fill-opacity="1"/>
+  
+  <!-- Right fold (lighter) -->
+  <path d="M 120 60 L 120 120 L 144 132 L 144 72 Z" fill="white" fill-opacity="0.85"/>
+</svg>
