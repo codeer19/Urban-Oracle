@@ -70,6 +70,18 @@ export async function uploadReport(reportData) {
   }
 }
 
+// Add a report directly (for demo data)
+export async function addReport(reportData) {
+  try {
+    const docRef = await addDoc(collection(db, 'reports'), reportData);
+    console.log('✅ Report added:', docRef.id);
+    return docRef.id;
+  } catch (error) {
+    console.error('❌ Add report error:', error);
+    throw error;
+  }
+}
+
 // Get all reports
 export async function getReports(filters = {}) {
   try {

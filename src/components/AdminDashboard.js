@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { getReports } from '../services/firebase';
 import { updateReportStatus, generateOptimalRoute } from '../services/admin';
 import LocationPicker from './LocationPicker';
+import { loadDemoData } from '../services/demoMode';
 
 function AdminDashboard() {
   const [reports, setReports] = useState([]);
@@ -38,6 +39,20 @@ function AdminDashboard() {
     const data = await getReports();
     setReports(data);
     setLoading(false);
+  };
+
+  const handleLoadDemoData = async () => {
+    if (window.confirm('Load demo data? This will add 12 sample reports to showcase the platform.')) {
+      setLoading(true);
+      const success = await loadDemoData();
+      if (success) {
+        alert('✅ Demo data loaded! Refresh to see impressive analytics.');
+        loadReports();
+      } else {
+        alert('ℹ️ Data already exists or error occurred.');
+      }
+      setLoading(false);
+    }
   };
 
   const handleStatusChange = async (reportId, newStatus) => {
@@ -106,12 +121,20 @@ function AdminDashboard() {
             <h1 className="text-3xl font-bold mb-2">🏛️ Admin Dashboard</h1>
             <p className="text-purple-100">City Official Control Panel</p>
           </div>
-          <button
-            onClick={() => setShowOfficeSetup(true)}
-            className="px-4 py-2 bg-white/20 hover:bg-white/30 rounded-lg"
-          >
-            📍 {adminOffice ? 'Change Office' : 'Set Office Location'}
-          </button>
+          <div className="flex gap-2">
+            <button
+              onClick={handleLoadDemoData}
+              className="px-4 py-2 bg-emerald-500 hover:bg-emerald-600 rounded-lg font-semibold"
+            >
+              📊 Load Demo Data
+            </button>
+            <button
+              onClick={() => setShowOfficeSetup(true)}
+              className="px-4 py-2 bg-white/20 hover:bg-white/30 rounded-lg"
+            >
+              📍 {adminOffice ? 'Change Office' : 'Set Office Location'}
+            </button>
+          </div>
         </div>
         {adminOffice && (
           <p className="text-sm text-purple-200 mt-2">

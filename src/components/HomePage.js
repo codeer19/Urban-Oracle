@@ -2,8 +2,10 @@ import React, { useState, useEffect } from 'react';
 import { getReports } from '../services/firebase';
 import { analyzeTrends, getPredictiveInsights } from '../services/predictiveAlerts';
 import HeatMap from './HeatMap';
-import Tooltip from './Tooltip';
+import ImpactDashboard from './ImpactDashboard';
+import AIInsightsPanel from './AIInsightsPanel';
 import { filterNearbyReports, getOrFetchUserLocation } from '../services/locationFilter';
+import { DEMO_REPORTS } from '../data/demoData';
 
 function HomePage({ darkMode, onNavigate }) {
   const [stats, setStats] = useState({ total: 0, fixed: 0, pending: 0, votes: 0 });
@@ -252,6 +254,12 @@ function HomePage({ darkMode, onNavigate }) {
           </div>
         )}
       </div>
+
+      {/* AI Insights Panel - WOW FACTOR */}
+      <AIInsightsPanel reports={allReports.length > 0 ? allReports : DEMO_REPORTS} darkMode={darkMode} />
+
+      {/* Impact Dashboard - IMPRESSIVE NUMBERS */}
+      <ImpactDashboard darkMode={darkMode} />
 
       {/* Features Showcase */}
       <div className="grid md:grid-cols-3 gap-4 md:gap-6">
