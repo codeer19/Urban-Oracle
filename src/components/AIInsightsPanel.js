@@ -117,55 +117,55 @@ const AIInsightsPanel = ({ reports = [], darkMode }) => {
   return (
     <div className="space-y-4">
       {/* Main Featured Insight */}
-      <div className={`${bgClass} ${borderClass} border rounded-2xl p-6 shadow-xl relative overflow-hidden`}>
+      <div className={`${bgClass} ${borderClass} border rounded-xl md:rounded-2xl p-4 md:p-6 shadow-xl relative overflow-hidden`}>
         {/* Animated gradient background */}
         <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/10 via-cyan-500/10 to-blue-500/10 animate-pulse"></div>
         
         <div className="relative z-10">
-          <div className="flex items-start justify-between mb-4">
-            <div className="flex items-center gap-3">
-              <div className="w-14 h-14 bg-gradient-to-br from-emerald-500 to-cyan-500 rounded-xl flex items-center justify-center text-3xl shadow-lg animate-bounce">
+          <div className="flex items-start justify-between mb-3 md:mb-4 gap-2">
+            <div className="flex items-center gap-2 md:gap-3 flex-1 min-w-0">
+              <div className="w-10 h-10 md:w-14 md:h-14 bg-gradient-to-br from-emerald-500 to-cyan-500 rounded-lg md:rounded-xl flex items-center justify-center text-2xl md:text-3xl shadow-lg animate-bounce flex-shrink-0">
                 {insights[activeInsight]?.icon || '🤖'}
               </div>
-              <div>
-                <div className="flex items-center gap-2">
-                  <h3 className={`text-xl font-bold ${textClass}`}>
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-1.5 md:gap-2 flex-wrap">
+                  <h3 className={`text-base md:text-xl font-bold ${textClass}`}>
                     {insights[activeInsight]?.title || 'AI Insight'}
                   </h3>
-                  <span className={`px-2 py-1 rounded-full text-xs font-semibold ${getImpactBg(insights[activeInsight]?.impact)} ${getImpactColor(insights[activeInsight]?.impact)}`}>
+                  <span className={`px-1.5 md:px-2 py-0.5 md:py-1 rounded-full text-[10px] md:text-xs font-semibold ${getImpactBg(insights[activeInsight]?.impact)} ${getImpactColor(insights[activeInsight]?.impact)}`}>
                     {insights[activeInsight]?.impact?.toUpperCase()}
                   </span>
                 </div>
-                <p className={`text-sm ${subtextClass}`}>Real-time AI analysis</p>
+                <p className={`text-xs md:text-sm ${subtextClass}`}>Real-time AI analysis</p>
               </div>
             </div>
             
             {insights[activeInsight]?.confidence && (
-              <div className="text-right">
-                <div className="text-2xl font-bold text-emerald-500">
+              <div className="text-right flex-shrink-0">
+                <div className="text-xl md:text-2xl font-bold text-emerald-500">
                   {insights[activeInsight].confidence}%
                 </div>
-                <div className={`text-xs ${subtextClass}`}>Confidence</div>
+                <div className={`text-[10px] md:text-xs ${subtextClass}`}>Confidence</div>
               </div>
             )}
           </div>
 
-          <div className={`${darkMode ? 'bg-zinc-800/50' : 'bg-slate-50'} rounded-xl p-4 mb-4`}>
-            <p className={`text-lg font-semibold ${textClass} mb-2`}>
+          <div className={`${darkMode ? 'bg-zinc-800/50' : 'bg-slate-50'} rounded-lg md:rounded-xl p-3 md:p-4 mb-3 md:mb-4`}>
+            <p className={`text-sm md:text-lg font-semibold ${textClass} mb-1.5 md:mb-2`}>
               {insights[activeInsight]?.message}
             </p>
-            <p className={`${subtextClass}`}>
+            <p className={`text-xs md:text-base ${subtextClass}`}>
               💡 {insights[activeInsight]?.action || insights[activeInsight]?.prediction}
             </p>
           </div>
 
           {insights[activeInsight]?.savingsEstimate && (
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-2">
-                <span className="text-2xl">💰</span>
-                <span className={`font-semibold ${textClass}`}>Potential Savings:</span>
+            <div className="flex items-center justify-between gap-2">
+              <div className="flex items-center gap-1.5 md:gap-2">
+                <span className="text-lg md:text-2xl">💰</span>
+                <span className={`text-sm md:text-base font-semibold ${textClass}`}>Potential Savings:</span>
               </div>
-              <div className="text-2xl font-bold text-emerald-500">
+              <div className="text-lg md:text-2xl font-bold text-emerald-500">
                 {insights[activeInsight].savingsEstimate}
               </div>
             </div>
@@ -189,23 +189,23 @@ const AIInsightsPanel = ({ reports = [], darkMode }) => {
       </div>
 
       {/* Quick Insights Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-3 md:gap-4">
         {insights.slice(1, 4).map((insight, idx) => (
           <div
             key={idx}
-            className={`${bgClass} ${borderClass} border rounded-xl p-4 hover:scale-105 transition-transform cursor-pointer`}
+            className={`${bgClass} ${borderClass} border rounded-lg md:rounded-xl p-3 md:p-4 hover:scale-105 transition-transform cursor-pointer`}
             onClick={() => setActiveInsight(idx + 1)}
           >
-            <div className="flex items-center gap-2 mb-2">
-              <span className="text-2xl">{insight.icon}</span>
-              <span className={`text-xs font-semibold ${getImpactColor(insight.impact)}`}>
+            <div className="flex items-center gap-1.5 md:gap-2 mb-1.5 md:mb-2">
+              <span className="text-xl md:text-2xl">{insight.icon}</span>
+              <span className={`text-[10px] md:text-xs font-semibold ${getImpactColor(insight.impact)}`}>
                 {insight.impact?.toUpperCase()}
               </span>
             </div>
-            <p className={`text-sm font-semibold ${textClass} mb-1`}>
+            <p className={`text-xs md:text-sm font-semibold ${textClass} mb-1`}>
               {insight.title}
             </p>
-            <p className={`text-xs ${subtextClass} line-clamp-2`}>
+            <p className={`text-[10px] md:text-xs ${subtextClass} line-clamp-2`}>
               {insight.message}
             </p>
           </div>
@@ -213,22 +213,22 @@ const AIInsightsPanel = ({ reports = [], darkMode }) => {
       </div>
 
       {/* AI Status Bar */}
-      <div className={`${bgClass} ${borderClass} border rounded-xl p-4 flex items-center justify-between`}>
-        <div className="flex items-center gap-3">
-          <div className="relative">
-            <div className="w-3 h-3 bg-emerald-500 rounded-full animate-pulse"></div>
-            <div className="absolute inset-0 w-3 h-3 bg-emerald-500 rounded-full animate-ping"></div>
+      <div className={`${bgClass} ${borderClass} border rounded-lg md:rounded-xl p-3 md:p-4 flex flex-col md:flex-row items-start md:items-center justify-between gap-2 md:gap-0`}>
+        <div className="flex items-center gap-2 md:gap-3">
+          <div className="relative flex-shrink-0">
+            <div className="w-2.5 h-2.5 md:w-3 md:h-3 bg-emerald-500 rounded-full animate-pulse"></div>
+            <div className="absolute inset-0 w-2.5 h-2.5 md:w-3 md:h-3 bg-emerald-500 rounded-full animate-ping"></div>
           </div>
           <div>
-            <span className={`font-semibold ${textClass}`}>AI Engine Active</span>
-            <span className={`text-sm ${subtextClass} ml-2`}>
+            <span className={`text-sm md:text-base font-semibold ${textClass}`}>AI Engine Active</span>
+            <span className={`text-xs md:text-sm ${subtextClass} block md:inline md:ml-2`}>
               Analyzing {reports.length || DEMO_REPORTS.length} reports in real-time
             </span>
           </div>
         </div>
-        <div className="flex items-center gap-2">
-          <span className={`text-sm ${subtextClass}`}>Powered by</span>
-          <span className="font-bold bg-gradient-to-r from-emerald-500 to-cyan-500 bg-clip-text text-transparent">
+        <div className="flex items-center gap-1.5 md:gap-2 ml-7 md:ml-0">
+          <span className={`text-xs md:text-sm ${subtextClass}`}>Powered by</span>
+          <span className="text-sm md:text-base font-bold bg-gradient-to-r from-emerald-500 to-cyan-500 bg-clip-text text-transparent">
             Groq AI
           </span>
         </div>
