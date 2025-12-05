@@ -14,32 +14,21 @@ L.Icon.Default.mergeOptions({
   shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/images/marker-shadow.png',
 });
 
-// Custom marker icons based on severity
-const getMarkerIcon = (severity, category) => {
+// Custom marker icons based on severity - clean circles
+const getMarkerIcon = (severity) => {
   const colors = {
-    minor: '#22c55e',
-    moderate: '#f59e0b',
-    severe: '#ef4444'
-  };
-  
-  const emojis = {
-    pothole: '🕳️',
-    streetlight: '💡',
-    graffiti: '🎨',
-    garbage: '🗑️',
-    damaged_sign: '🚧',
-    flooding: '💧',
-    other: '❓'
+    minor: '#22c55e',    // Green
+    moderate: '#f59e0b', // Orange
+    severe: '#ef4444'    // Red
   };
   
   const color = colors[severity] || '#6b7280';
-  const emoji = emojis[category] || '📍';
   
   return L.divIcon({
-    html: `<div style="background: ${color}; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; border: 3px solid white; box-shadow: 0 2px 8px rgba(0,0,0,0.3);">${emoji}</div>`,
+    html: `<div style="background: ${color}; width: 24px; height: 24px; border-radius: 50%; border: 3px solid white; box-shadow: 0 2px 8px rgba(0,0,0,0.4);"></div>`,
     className: 'custom-marker',
-    iconSize: [40, 40],
-    iconAnchor: [20, 20],
+    iconSize: [24, 24],
+    iconAnchor: [12, 12],
   });
 };
 
@@ -283,7 +272,7 @@ function MapView() {
                 <Marker
                   key={report.id}
                   position={[report.location.lat, report.location.lng]}
-                  icon={getMarkerIcon(report.severity, report.category)}
+                  icon={getMarkerIcon(report.severity)}
                   eventHandlers={{
                     click: () => setSelectedReport(report)
                   }}
