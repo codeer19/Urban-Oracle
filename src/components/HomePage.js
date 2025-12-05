@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { getReports } from '../services/firebase';
-import { analyzeTrends, getPredictiveInsights } from '../services/predictiveAlerts';
 import HeatMap from './HeatMap';
 import ImpactDashboard from './ImpactDashboard';
 import AIInsightsPanel from './AIInsightsPanel';
@@ -9,10 +8,7 @@ import { DEMO_REPORTS } from '../data/demoData';
 
 function HomePage({ darkMode, onNavigate }) {
   const [stats, setStats] = useState({ total: 0, fixed: 0, pending: 0, votes: 0 });
-  const [topReports, setTopReports] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [alerts, setAlerts] = useState([]);
-  const [insights, setInsights] = useState(null);
   const [showHeatMap, setShowHeatMap] = useState(false);
   const [allReports, setAllReports] = useState([]);
 
@@ -38,15 +34,6 @@ function HomePage({ darkMode, onNavigate }) {
         pending: reports.filter(r => r.status === 'pending').length,
         votes: reports.reduce((sum, r) => sum + (r.votes || 0), 0)
       });
-      setTopReports(reports.sort((a, b) => (b.votes || 0) - (a.votes || 0)).slice(0, 5));
-      
-      // Generate predictive alerts (only for nearby reports)
-      const predictiveAlerts = analyzeTrends(reports);
-      setAlerts(predictiveAlerts.slice(0, 3)); // Top 3 alerts
-      
-      // Get insights
-      const predictiveInsights = getPredictiveInsights(reports);
-      setInsights(predictiveInsights);
     } catch (error) {
       console.error('Error loading data:', error);
     }
@@ -126,159 +113,74 @@ function HomePage({ darkMode, onNavigate }) {
         ))}
       </div>
 
-      {/* Top Voted Issues */}
-      <div className={`${cardClass} border rounded-xl md:rounded-2xl p-4 md:p-6 backdrop-blur-lg`}>
-        <h2 className={`text-lg md:text-2xl font-bold mb-4 md:mb-6 ${textClass} flex items-center gap-2`}>
-          🔥 Trending Issues
-        </h2>
-        
-        {loading ? (
-          <div className="space-y-3">
-            {[1, 2, 3].map(i => (
-              <div key={i} className="animate-pulse">
-                <div className={`h-20 ${darkMode ? 'bg-slate-700' : 'bg-slate-200'} rounded-lg`}></div>
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div className="space-y-3">
-            {topReports.map((report, i) => (
-              <div
-                key={report.id}
-                className={`${darkMode ? 'bg-slate-700/50 hover:bg-slate-700' : 'bg-slate-50 hover:bg-slate-100'} p-3 md:p-4 rounded-lg flex items-center gap-3 md:gap-4 transition-all hover:transform hover:scale-102 cursor-pointer animate-slide-in`}
-                style={{ animationDelay: `${i * 0.1}s` }}
-              >
-                <img 
-                  src={report.imageUrl} 
-                  alt={report.category}
-                  className="w-12 h-12 md:w-16 md:h-16 object-cover rounded-lg flex-shrink-0"
-                />
-                <div className="flex-1 min-w-0">
-                  <h3 className={`font-bold capitalize text-sm md:text-base ${textClass} truncate`}>{report.category}</h3>
-                  <p className="text-xs md:text-sm text-slate-400 capitalize">{report.severity} severity</p>
-                </div>
-                <div className="text-center flex-shrink-0">
-                  <p className="text-xl md:text-2xl font-bold text-purple-500">{report.votes || 0}</p>
-                  <p className="text-[10px] md:text-xs text-slate-400">votes</p>
-                </div>
-                <button
-                  onClick={() => onNavigate('map')}
-                  className="px-3 md:px-4 py-2 bg-gradient-to-r from-cyan-500 to-purple-600 text-white rounded-lg hover:from-cyan-600 hover:to-purple-700 transform hover:scale-105 transition-all text-sm md:text-base flex-shrink-0"
-                >
-                  Vote
-                </button>
-              </div>
-            ))}
-          </div>
-        )}
-      </div>
 
-      {/* Predictive AI Alerts - WOW FACTOR */}
-      {alerts.length > 0 && (
-        <div className={`${cardClass} border border-red-500/30 rounded-xl md:rounded-2xl p-4 md:p-6 backdrop-blur-lg animate-pulse-glow`}>
-          <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-4">
-            <h2 className={`text-lg md:text-2xl font-bold ${textClass} flex items-center gap-2`}>
-              🔮 AI Predictive Alerts
-            </h2>
-            <span className="px-3 py-1 bg-red-500/20 text-red-400 rounded-full text-xs md:text-sm font-semibold self-start">
-              {alerts.length} Active
-            </span>
-          </div>
-          
-          <div className="space-y-3">
-            {alerts.map((alert, i) => (
-              <div
-                key={i}
-                className={`${darkMode ? 'bg-red-900/20 border-red-500/30' : 'bg-red-50 border-red-200'} border rounded-lg md:rounded-xl p-3 md:p-4 animate-slide-in`}
-                style={{ animationDelay: `${i * 0.1}s` }}
-              >
-                <div className="flex items-start gap-2 md:gap-3">
-                  <div className="text-2xl md:text-3xl flex-shrink-0">{alert.type === 'cluster' ? '⚠️' : alert.type === 'weather' ? '🌧️' : '📈'}</div>
-                  <div className="flex-1 min-w-0">
-                    <h3 className={`font-bold mb-1 text-sm md:text-base ${textClass}`}>{alert.message}</h3>
-                    <p className="text-xs md:text-sm text-slate-400 mb-2">{alert.prediction}</p>
-                    <div className="flex flex-wrap items-center gap-2">
-                      <span className="text-xs px-2 py-1 bg-green-500/20 text-green-400 rounded-full font-semibold whitespace-nowrap">
-                        💰 Save: {alert.savingsEstimate}
-                      </span>
-                      <span className={`text-xs px-2 py-1 rounded-full font-semibold whitespace-nowrap ${
-                        alert.severity === 'high' ? 'bg-red-500/20 text-red-400' :
-                        alert.severity === 'medium' ? 'bg-yellow-500/20 text-yellow-400' :
-                        'bg-blue-500/20 text-blue-400'
-                      }`}>
-                        {alert.severity.toUpperCase()} PRIORITY
-                      </span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
 
-          {insights && (
-            <div className="mt-4 pt-4 border-t border-red-500/20">
-              <p className="text-center text-lg font-bold text-green-400">
-                💰 Total Potential Savings: ${insights.estimatedSavings.toLocaleString()}
-              </p>
-              <p className="text-center text-sm text-slate-400 mt-1">
-                By addressing these issues proactively
-              </p>
-            </div>
-          )}
-        </div>
-      )}
 
-      {/* Heat Map Toggle */}
-      <div className={`${cardClass} border rounded-2xl p-6 backdrop-blur-lg`}>
-        <div className="flex items-center justify-between mb-4">
-          <h2 className={`text-2xl font-bold ${textClass}`}>
-            🔥 Issue Heat Map
-          </h2>
-          <button
-            onClick={() => setShowHeatMap(!showHeatMap)}
-            className="px-4 py-2 bg-gradient-to-r from-orange-500 to-red-600 text-white rounded-lg hover:from-orange-600 hover:to-red-700 transform hover:scale-105 transition-all font-semibold"
-          >
-            {showHeatMap ? 'Hide' : 'Show'} Heat Map
-          </button>
-        </div>
-        
-        {showHeatMap && allReports.length > 0 && (
-          <HeatMap reports={allReports} darkMode={darkMode} />
-        )}
-        
-        {!showHeatMap && (
-          <div className="text-center py-8">
-            <p className="text-slate-400">
-              Visualize problem hotspots and density patterns
-            </p>
-          </div>
-        )}
-      </div>
-
-      {/* AI Insights Panel - WOW FACTOR */}
-      <AIInsightsPanel reports={allReports.length > 0 ? allReports : DEMO_REPORTS} darkMode={darkMode} />
 
       {/* Impact Dashboard - IMPRESSIVE NUMBERS */}
       <ImpactDashboard darkMode={darkMode} />
 
-      {/* Features Showcase */}
-      <div className="grid md:grid-cols-3 gap-4 md:gap-6">
-        {[
-          { icon: '🔮', title: 'Predictive AI', desc: 'Know which issues will worsen before they become disasters' },
-          { icon: '🔐', title: 'Blockchain Voting', desc: 'Transparent, tamper-proof citizen prioritization' },
-          { icon: '🚀', title: 'Smart Routes', desc: 'AI optimizes repair routes, saving 40% time' }
-        ].map((feature, i) => (
-          <div
-            key={i}
-            className={`${cardClass} border rounded-xl p-4 md:p-6 backdrop-blur-lg hover:border-purple-500 transition-all hover:transform hover:scale-105 animate-fade-in`}
-            style={{ animationDelay: `${i * 0.2}s` }}
-          >
-            <div className="text-4xl md:text-5xl mb-3 md:mb-4">{feature.icon}</div>
-            <h3 className={`text-lg md:text-xl font-bold mb-2 ${textClass}`}>{feature.title}</h3>
-            <p className="text-sm md:text-base text-slate-400">{feature.desc}</p>
+      {/* AI Insights Panel - WOW FACTOR */}
+      <AIInsightsPanel reports={allReports.length > 0 ? allReports : DEMO_REPORTS} darkMode={darkMode} />
+
+      {/* Heat Map Visualization */}
+      {allReports.length > 0 && (
+        <div className={`${cardClass} border rounded-xl md:rounded-2xl p-4 md:p-6`}>
+          <div className="flex items-center justify-between mb-4">
+            <div>
+              <h2 className={`text-xl md:text-2xl font-bold ${textClass}`}>
+                🔥 Issue Heat Map
+              </h2>
+              <p className="text-sm text-slate-400 mt-1">
+                Visualize problem hotspots by severity
+              </p>
+            </div>
+            <button
+              onClick={() => setShowHeatMap(!showHeatMap)}
+              className={`px-4 py-2 rounded-lg font-semibold transition-all ${
+                showHeatMap 
+                  ? 'bg-gradient-to-r from-orange-500 to-red-600 text-white' 
+                  : darkMode ? 'bg-zinc-800 text-slate-300' : 'bg-slate-200 text-slate-700'
+              }`}
+            >
+              {showHeatMap ? 'Hide' : 'Show'} Map
+            </button>
           </div>
-        ))}
+          
+          {showHeatMap && <HeatMap reports={allReports} darkMode={darkMode} />}
+        </div>
+      )}
+
+      {/* Quick Actions */}
+      <div className="grid md:grid-cols-2 gap-4">
+        <button
+          onClick={() => onNavigate('map')}
+          className={`${cardClass} border rounded-xl p-6 hover:border-emerald-500 transition-all text-left group`}
+        >
+          <div className="text-4xl mb-3">🗺️</div>
+          <h3 className={`text-xl font-bold mb-2 ${textClass} group-hover:text-emerald-400 transition-colors`}>
+            View All Issues on Map
+          </h3>
+          <p className="text-slate-400">
+            See real-time reports, vote on priorities, and track progress
+          </p>
+        </button>
+        
+        <button
+          onClick={() => onNavigate('report')}
+          className={`${cardClass} border rounded-xl p-6 hover:border-cyan-500 transition-all text-left group`}
+        >
+          <div className="text-4xl mb-3">📝</div>
+          <h3 className={`text-xl font-bold mb-2 ${textClass} group-hover:text-cyan-400 transition-colors`}>
+            Report New Issue
+          </h3>
+          <p className="text-slate-400">
+            Upload photo, AI classifies automatically, takes 30 seconds
+          </p>
+        </button>
       </div>
+
+
     </div>
   );
 }

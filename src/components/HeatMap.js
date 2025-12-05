@@ -34,23 +34,47 @@ function HeatMap({ reports, darkMode }) {
   useEffect(() => {
     if (!mapInstanceRef.current || !reports.length) return;
 
-    // Create heat intensity circles
+    // Clear existing layers
+    mapInstanceRef.current.eachLayer((layer) => {
+      if (layer instanceof L.Circle || layer instanceof L.CircleMarker) {
+        mapInstanceRef.current.removeLayer(layer);
+      }
+    });
+
+    // Create heat intensity circles based on severity
     reports.forEach(report => {
       const severity = report.severity === 'severe' ? 3 : report.severity === 'moderate' ? 2 : 1;
       const votes = report.votes || 0;
       const intensity = severity * (1 + votes / 10);
 
+      // Color based on severity
       const color = report.severity === 'severe' ? '#ef4444' : 
-                    report.severity === 'moderate' ? '#f59e0b' : '#22c55e';
+                    report.severity === 'moderate' ? '#f59e0b' : '#10b981';
 
+      // Create circle with better visibility
       L.circle([report.location.lat, report.location.lng], {
         color: color,
         fillColor: color,
-        fillOpacity: 0.3,
-        radius: intensity * 100,
-        weight: 2
-      }).addTo(mapInstanceRef.current);
+        fillOpacity: 0.4,
+        opacity: 0.8,
+        radius: intensity * 150, // Larger radius for better visibility
+        weight: 3
+      })
+      .bindPopup(`
+        <div style="min-width: 150px;">
+          <strong style="text-transform: capitalize;">${report.category}</strong><br/>
+          <span style="color: ${color};">Severity: ${report.severity}</span><br/>
+          Votes: ${votes}
+        </div>
+      `)
+      .addTo(mapInstanceRef.current);
     });
+
+    // Fit map to show all markers
+    if (reports.length > 0) {
+      const bounds = L.latLngBounds(reports.map(r => [r.location.lat, r.location.lng]));
+      mapInstanceRef.current.fitBounds(bounds, { padding: [50, 50] });
+    }
   }, [reports]);
 
   return (
